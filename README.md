@@ -86,3 +86,89 @@ Go to the "Headers" tab, add Content-Type with value application/json.
 Go to the "Body" tab, select "raw", choose "JSON" from the dropdown.
 Enter the request body: {"query": "Ask a question about your book here"}
 Click "Send". Check the response body for the answer.
+
+
+classDiagram
+    class FlaskApp {
+        +run()
+        +route(/api/hello)
+        +route(/api/chat)
+        -rag_chain : RAGChain
+        -initialize_components()
+    }
+    class RAGChain {
+        +invoke(query: str) : str
+        -retriever : Retriever
+        -prompt_template : PromptTemplate
+        -llm : ChatOpenAI
+    }
+    class Retriever {
+        +get_relevant_documents(query: str) : List~Document~
+        -vectorstore : Chroma
+    }
+    class Chroma {
+        +from_documents(documents, embedding, persist_directory)
+        +load_local(persist_directory, embedding)
+        +as_retriever() : Retriever
+        +add_documents(documents)
+        -embedding_function : OpenAIEmbeddings
+        -persist_directory : str
+    }
+    class OpenAIEmbeddings {
+        +embed_query(text: str) : List~float~
+        +embed_documents(texts: List~str~) : List~List~float~~
+        -api_key : str
+        -model : str
+    }
+    class ChatOpenAI {
+        +invoke(prompt) : str
+        -api_key : str
+        -model : str
+        -temperature : float
+    }
+    class PromptTemplate {
+        +format(context, question) : str
+        -template_string : str
+    }
+    class Document {
+        +page_content : str
+        +metadata : dict
+    }
+    class TextLoader {
+         +load() : List~Document~
+         -file_path : str
+    }
+     class TextSplitter {
+         +split_documents(documents) : List~Document~
+         -chunk_size : int
+         -chunk_overlap : int
+    }
+    class IngestionScript {
+        +create_vector_store()
+        -loader : TextLoader
+        -splitter : TextSplitter
+        -embeddings : OpenAIEmbeddings
+        -vectorstore : Chroma
+    }
+
+
+    FlaskApp --> RAGChain : uses
+    RAGChain --> Retriever : uses
+    RAGChain --> PromptTemplate : uses
+    RAGChain --> ChatOpenAI : uses
+    Retriever --> Chroma : uses
+    Chroma --> OpenAIEmbeddings : uses (as embedding_function)
+
+    IngestionScript --> TextLoader : uses
+    IngestionScript --> TextSplitter : uses
+    IngestionScript --> OpenAIEmbeddings : uses
+    IngestionScript --> Chroma : creates/updates
+
+    TextSplitter --> Document : creates list of
+    TextLoader --> Document : creates list of
+
+    %% Explanation:
+    %% This diagram shows the main Python classes/components involved in the backend.
+    %% FlaskApp handles requests and uses the RAGChain.
+    %% RAGChain orchestrates retrieval (via Retriever/Chroma) and generation (via ChatOpenAI/PromptTemplate).
+    %% IngestionScript uses Loader/Splitter/Embeddings/Chroma to populate the database initially.
