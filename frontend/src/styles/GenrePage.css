@@ -1,26 +1,21 @@
-/* src/styles/GenrePage.css */
-
-/* Container for the whole page content */
 .genre-page-container {
   padding: 2rem;
   height: 100%;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
-  background-color: #ffffff;
+  background: linear-gradient(135deg, #f0f4ff, #ffeefc);
   width: 100%;
 }
 
-/* Title styling */
 .genre-page-title {
-  font-size: 1.875rem;
+  font-size: 2rem;
   font-weight: 700;
   text-align: center;
-  margin-bottom: 2.5rem;
-  color: #1f2937;
+  margin-bottom: 2rem;
+  color: #2c3e50;
 }
 
-/* Responsive grid for genre tiles */
 .genre-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
@@ -29,104 +24,95 @@
   flex-grow: 1;
 }
 
-/* Individual genre tile styling (base + hover) */
 .genre-tile {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: 1.5rem;
-  border-radius: 0.75rem;
-  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  border-radius: 2rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
   text-decoration: none;
   aspect-ratio: 1 / 1;
-  transition: transform 0.2s ease-in, box-shadow 0.2s ease-in;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }
 
 .genre-tile:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  transform: scale(1.05);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
 }
 
 .genre-tile:focus-visible {
-  outline: 2px solid #4f46e5;
-  outline-offset: 2px;
+  outline: 2px solid #a78bfa;
+  outline-offset: 4px;
 }
 
-/* Icon styles within the tile */
 .genre-tile-icon {
   margin-bottom: 1rem;
 }
 
-/* Text styles within the tile */
 .genre-tile-text {
   font-size: 1.125rem;
   font-weight: 600;
   text-align: center;
+  color: #333;
 }
 
-/* Medium screens and up */
 @media (min-width: 768px) {
   .genre-tile-text {
     font-size: 1.25rem;
   }
-
   .genre-tile {
     padding: 2rem;
   }
-
   .genre-grid {
     gap: 2rem;
   }
 }
 
-/* Small screens (mobile tweaks) */
 @media (max-width: 480px) {
   .genre-tile-text {
     font-size: 1rem;
   }
-
   .genre-tile-icon {
     width: 36px;
     height: 36px;
   }
-
   .genre-tile {
     padding: 1rem;
   }
 }
 
-/* --- Genre Specific Color Classes --- */
 .genre-tile--self-help {
-  background-color: #ecfdf5;
-  color: #065f46;
+  background-color: #e3fcec;
+  color: #116d53;
 }
 .genre-tile--self-help:hover {
-  background-color: #d1fae5;
+  background-color: #cbf3de;
 }
 
 .genre-tile--devotional {
-  background-color: #f5f3ff;
-  color: #6d28d9;
+  background-color: #f3e8ff;
+  color: #6b21a8;
 }
 .genre-tile--devotional:hover {
-  background-color: #ede9fe;
+  background-color: #e9d5ff;
 }
 
 .genre-tile--sci-fi {
-  background-color: #f0f9ff;
-  color: #0369a1;
+  background-color: #e0f7fa;
+  color: #006064;
 }
 .genre-tile--sci-fi:hover {
-  background-color: #e0f2fe;
+  background-color: #b2ebf2;
 }
 
 .genre-tile--biography {
-  background-color: #fffbeb;
-  color: #b45309;
+  background-color: #fff8e1;
+  color: #795548;
 }
 .genre-tile--biography:hover {
-  background-color: #fef3c7;
+  background-color: #ffecb3;
 }
 
 .genre-tile--unknown {

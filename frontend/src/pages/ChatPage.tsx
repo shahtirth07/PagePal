@@ -1,14 +1,11 @@
-// src/pages/ChatPage.tsx
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
-// Define message structure
 interface Message {
   sender: 'user' | 'ai';
   text: string;
 }
 
-// Define book details structure
 interface BookDetails {
   _id: string;
   title: string;
@@ -17,26 +14,24 @@ interface BookDetails {
 }
 
 const ChatPage: React.FC = () => {
-  const { bookId } = useParams<{ bookId: string }>(); // Get bookId from URL
-  const navigate = useNavigate(); // Hook for navigation
+  const { bookId } = useParams<{ bookId: string }>();
+  const navigate = useNavigate();
 
   const [bookDetails, setBookDetails] = useState<BookDetails | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
-  const [isLoading, setIsLoading] = useState(false); // Loading state for AI response
-  const [isLoadingBook, setIsLoadingBook] = useState(true); // Loading state for book details
-  const [error, setError] = useState<string | null>(null); // Error state for book loading/chat
+  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingBook, setIsLoadingBook] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const messagesEndRef = useRef<HTMLDivElement>(null); // Ref for scrolling
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Scroll to bottom of messages
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   useEffect(scrollToBottom, [messages]);
 
-  // Fetch book details when component mounts or bookId changes
   useEffect(() => {
     const fetchBookDetails = async () => {
       if (!bookId) {
@@ -46,10 +41,9 @@ const ChatPage: React.FC = () => {
       }
       setIsLoadingBook(true);
       setError(null);
-      setMessages([]); // Clear previous messages when loading new book
+      setMessages([]);
       try {
         const apiUrl = `http://localhost:5000/api/books/${bookId}`;
-        console.log(`Fetching book details from: ${apiUrl}`);
         const response = await fetch(apiUrl);
         if (!response.ok) {
           if (response.status === 404) {
@@ -59,73 +53,64 @@ const ChatPage: React.FC = () => {
         }
         const data: BookDetails = await response.json();
         setBookDetails(data);
-        // Add an initial greeting from PagePal
         setMessages([{ sender: 'ai', text: `You are now chatting about "${data.title}". Ask me anything!` }]);
       } catch (err: any) {
-        console.error("Failed to fetch book details:", err);
         setError(err.message || "Failed to load book details.");
-        setBookDetails(null); // Clear details on error
+        setBookDetails(null);
       } finally {
         setIsLoadingBook(false);
       }
     };
 
     fetchBookDetails();
-  }, [bookId]); // Re-run effect if bookId changes
+  }, [bookId]);
 
-
-  // Handle sending chat messages
   const handleSend = async () => {
     const userMessageText = input.trim();
-    // Don't send if loading, no book details, or empty input
     if (!userMessageText || isLoading || !bookDetails) return;
 
     const newUserMessage: Message = { sender: 'user', text: userMessageText };
     setMessages(prev => [...prev, newUserMessage]);
     setInput('');
     setIsLoading(true);
-    // setError(null); // Optionally clear previous chat errors
 
     try {
-      console.log(`Sending query about "${bookDetails.title}":`, userMessageText);
       const response = await fetch('http://localhost:5000/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        // Send query AND the book title as a filter
         body: JSON.stringify({
           query: userMessageText,
-          book_filter: { title: bookDetails.title } // Use title for filtering
+          book_filter: { title: bookDetails.title }
         }),
       });
 
       if (!response.ok) {
         let errorMsg = `HTTP error! status: ${response.status}`;
-         try { const errorData = await response.json(); errorMsg = errorData.error || errorMsg; }
-         catch (e) { console.error("Could not parse error response:", e); }
+        try {
+          const errorData = await response.json();
+          errorMsg = errorData.error || errorMsg;
+        } catch (e) {
+          console.error("Could not parse error response:", e);
+        }
         throw new Error(errorMsg);
       }
 
       const data = await response.json();
-      console.log("Received answer:", data.answer);
       const aiMessage: Message = { sender: 'ai', text: data.answer };
       setMessages(prev => [...prev, aiMessage]);
 
     } catch (err: any) {
-      console.error("Failed to send/receive chat message:", err);
       const errorMessage: Message = { sender: 'ai', text: `Sorry, an error occurred: ${err.message}` };
       setMessages(prev => [...prev, errorMessage]);
-      // setError(err.message); // Set error state if needed
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Input change handler
   const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInput(event.target.value);
   };
 
-  // Send on Enter key press
   const handleKeyPress = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (event.key === 'Enter' && !event.shiftKey) {
       event.preventDefault();
@@ -133,59 +118,75 @@ const ChatPage: React.FC = () => {
     }
   };
 
-  // Render component
   return (
-    <div className="p-6 h-full flex flex-col">
-       {/* Back Button */}
-       <div className="mb-4 flex-shrink-0"> {/* Ensure button doesn't shrink */}
-         <button onClick={() => navigate(-1)} className="text-blue-600 hover:underline">
-           &larr; Back to Books
-         </button>
-       </div>
+    <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', height: '100%', backgroundColor: '#f4f7f6' }}>
+      <div style={{ marginBottom: '24px', flexShrink: 0 }}>
+        <button onClick={() => navigate(-1)} style={{ color: '#3498db', textDecoration: 'underline', fontSize: '18px' }}>
+          &larr; Back to Books
+        </button>
+      </div>
 
-       {/* Header showing book title or loading/error state */}
-       <h1 className="text-2xl font-bold text-center mb-4 text-gray-800 flex-shrink-0">
-         {isLoadingBook ? "Loading Book..." : bookDetails ? `Chat with: ${bookDetails.title}` : "Book Not Found"}
-         {bookDetails?.author && <span className="block text-lg font-normal text-gray-600">by {bookDetails.author}</span>}
-       </h1>
+      <h1 style={{ textAlign: 'center', fontSize: '24px', fontWeight: 'bold', color: '#333', marginBottom: '24px', flexShrink: 0 }}>
+        {isLoadingBook ? "Loading Book..." : bookDetails ? `Chat with: ${bookDetails.title}` : "Book Not Found"}
+        {bookDetails?.author && <span style={{ display: 'block', fontSize: '16px', fontWeight: 'normal', color: '#777' }}> by {bookDetails.author}</span>}
+      </h1>
 
-       {/* Display error if book loading failed */}
-       {error && !isLoadingBook && <p className="text-center text-red-500 mb-4 flex-shrink-0">Error loading book: {error}</p>}
+      {error && !isLoadingBook && <p style={{ color: '#e74c3c', textAlign: 'center', marginBottom: '12px' }}>Error loading book: {error}</p>}
 
-       {/* Chat Interface - Allow chat container to grow and scroll */}
-       <div className="chat-container flex-grow flex flex-col overflow-hidden border border-gray-300 rounded-md mt-2">
-         <div className="messages flex-grow overflow-y-auto p-4 bg-gray-50">
-           {messages.map((msg, index) => (
-             <div key={index} className={`message ${msg.sender} mb-3 max-w-[85%] p-3 rounded-lg ${msg.sender === 'user' ? 'bg-blue-100 ml-auto' : 'bg-gray-200 mr-auto'}`}>
-               <p className="text-sm whitespace-pre-wrap">{msg.text}</p> {/* Added whitespace-pre-wrap */}
-             </div>
-           ))}
-           {isLoading && (
-             <div className="message ai mb-3 max-w-[85%] p-3 rounded-lg bg-gray-200 mr-auto">
-               <p className="text-sm italic">PagePal is thinking...</p>
-             </div>
-           )}
-           <div ref={messagesEndRef} />
-         </div>
-         <div className="input-area flex p-2 border-t border-gray-300 bg-white flex-shrink-0">
-           <textarea
-             value={input}
-             onChange={handleInputChange}
-             onKeyPress={handleKeyPress}
-             placeholder={bookDetails ? `Ask about ${bookDetails.title}...` : "Loading book..."}
-             rows={2}
-             className="flex-grow p-2 border border-gray-300 rounded-md resize-none mr-2 focus:outline-none focus:ring-1 focus:ring-blue-500"
-             disabled={isLoading || isLoadingBook || !bookDetails}
-           />
-           <button
-             onClick={handleSend}
-             className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
-             disabled={isLoading || isLoadingBook || !bookDetails || !input.trim()}
-           >
-             Send
-           </button>
-         </div>
-       </div>
+      <div style={{ display: 'flex', flexDirection: 'row', backgroundColor: 'white', padding: '16px', borderRadius: '8px', marginBottom: '24px', boxShadow: '0 6px 12px rgba(0, 0, 0, 0.1)' }}>
+        {/* Book Cover Placeholder */}
+        <div style={{ width: '120px', height: '180px', backgroundColor: '#e0e0e0', borderRadius: '8px', marginRight: '20px', display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '18px', color: '#888' }}>
+          <span>Upload Cover</span>
+        </div>
+
+        {/* Book Details */}
+        <div style={{ flexGrow: 1 }}>
+          <h2 style={{ fontSize: '24px', fontWeight: 'bold', color: '#2c3e50', marginBottom: '8px' }}>{bookDetails?.title}</h2>
+          <p style={{ fontSize: '16px', color: '#555', margin: '4px 0' }}>by {bookDetails?.author}</p>
+          {bookDetails?.genre && <p style={{ fontSize: '16px', color: '#3498db', fontStyle: 'italic' }}>Genre: {bookDetails.genre}</p>}
+        </div>
+      </div>
+
+      <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', border: '1px solid #ddd', borderRadius: '12px', backgroundColor: 'white' }}>
+        <div style={{ padding: '16px', overflowY: 'auto', flexGrow: 1, backgroundColor: '#f9f9f9' }}>
+          {messages.map((msg, index) => (
+            <div key={index} style={{
+              maxWidth: '85%', padding: '10px', borderRadius: '8px', marginBottom: '12px',
+              backgroundColor: msg.sender === 'user' ? '#d0e9ff' : '#f1f1f1', marginLeft: msg.sender === 'user' ? 'auto' : '0'
+            }}>
+              <p style={{ fontSize: '14px', lineHeight: '1.4', margin: '0' }}>{msg.text}</p>
+            </div>
+          ))}
+          {isLoading && (
+            <div style={{ maxWidth: '85%', padding: '10px', borderRadius: '8px', marginBottom: '12px', backgroundColor: '#f1f1f1', marginRight: 'auto' }}>
+              <p style={{ fontSize: '14px', fontStyle: 'italic' }}>PagePal is thinking...</p>
+            </div>
+          )}
+          <div ref={messagesEndRef} />
+        </div>
+
+        <div style={{ display: 'flex', padding: '16px', borderTop: '1px solid #ddd', backgroundColor: 'white' }}>
+          <textarea
+            value={input}
+            onChange={handleInputChange}
+            onKeyPress={handleKeyPress}
+            placeholder={bookDetails ? `Ask about ${bookDetails.title}...` : "Loading book..."}
+            rows={2}
+            style={{ flexGrow: 1, padding: '10px', border: '1px solid #ddd', borderRadius: '8px', resize: 'none', fontSize: '14px', outline: 'none' }}
+            disabled={isLoading || isLoadingBook || !bookDetails}
+          />
+          <button
+            onClick={handleSend}
+            style={{
+              padding: '12px 20px', marginLeft: '12px', backgroundColor: '#3498db', color: 'white', border: 'none', borderRadius: '8px',
+              cursor: 'pointer', transition: 'background-color 0.3s ease', disabled: isLoading || isLoadingBook || !bookDetails || !input.trim() ? '#ddd' : '#2980b9'
+            }}
+            disabled={isLoading || isLoadingBook || !bookDetails || !input.trim()}
+          >
+            Send
+          </button>
+        </div>
+      </div>
     </div>
   );
 };
