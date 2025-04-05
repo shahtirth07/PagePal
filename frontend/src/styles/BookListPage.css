@@ -1,0 +1,155 @@
+/* General page styling */
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f2b3fd; /* Soft pastel background */
+    margin: 0;
+    padding: 0;
+  }
+  
+  .p-6 {
+    padding: 1.5rem; /* Padding for the container */
+  }
+  
+  .text-blue-600 {
+    color: #3498db;
+  }
+  
+  .text-gray-800 {
+    color: #333;
+  }
+  
+  /* Back Button */
+  .text-blue-600:hover {
+    text-decoration: underline;
+  }
+  
+  /* Page Title */
+  h1 {
+    font-size: 2rem;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 2rem;
+    color: #333;
+  }
+  
+  /* Loading and Error states */
+  .text-center {
+    text-align: center;
+  }
+  
+  .text-gray-500 {
+    color: #888;
+  }
+  
+  .text-red-500 {
+    color: #e74c3c;
+  }
+  
+  .text-gray-500 {
+    color: #888;
+  }
+  
+  /* Book List Container */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr); /* 1 column on small screens */
+    gap: 16px;
+    padding: 1rem;
+  }
+  
+  /* Responsive Layout: 2 columns for small screens, 3 columns for large screens */
+  @media (min-width: 640px) {
+    .grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  
+  /* Book Card Styling */
+  .cursor-pointer {
+    cursor: pointer;
+  }
+  
+  .book-card {
+    background-color: #ecf0f1; /* Soft white background */
+    border-radius: 12px; /* Rounded corners */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Light shadow */
+    overflow: hidden; /* Ensures no content is outside the box */
+    transition: transform 0.3s, box-shadow 0.3s ease; /* Smooth transition on hover */
+  }
+  
+  .book-card:hover {
+    transform: translateY(-5px); /* Slight lift on hover */
+    box-shadow: 0 12px 18px rgba(0, 0, 0, 0.2); /* Deeper shadow on hover */
+  }
+  
+  /* Book Cover Image */
+  .book-cover {
+    width: 100%;
+    height: 250px; /* Fixed height for the cover */
+    object-fit: cover; /* Ensures the image fits the container */
+    border-bottom: 4px solid #f0f0f0; /* Light border to separate cover from text */
+  }
+  
+  /* Box around Book Information */
+  .book-info-box {
+    padding: 16px;
+    background-color: #b4efd9; /* White background for the book info box */
+    border: 1px solid #f0f0f0; /* Light border around the information */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Light shadow for the info box */
+    transition: background-color 0.3s ease;
+  }
+  
+  /* Book Information */
+  .book-info h3 {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 8px;
+  }
+  
+  .book-info p {
+    font-size: 1rem;
+    color: #7f8c8d;
+    margin: 4px 0;
+  }
+  
+  .book-info .author {
+    font-style: italic;
+    color: #95a5a6;
+  }
+  
+  .book-info .genre {
+    font-weight: bold;
+    color: #3498db;
+  }
+  
+  /* Hover Effect for Book Information */
+  .book-card:hover .book-info-box {
+    background-color: #ecf0f1; /* Slightly different background on hover */
+  }
+  
+  /* Load More Button */
+  .load-more-btn {
+    display: block;
+    margin: 20px auto;
+    padding: 12px 24px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+  }
+  
+  .load-more-btn:hover {
+    background-color: #2980b9;
+  }
+  

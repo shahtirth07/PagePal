@@ -1,4 +1,3 @@
-// src/pages/GenrePage.tsx
 import React from "react";
 import { Link } from "react-router-dom";
 import {
@@ -9,6 +8,11 @@ import {
   HelpCircle,
   BookHeart,
   Atom,
+  DollarSign, // Added DollarSign for Business/Finance
+  Feather, // Added Feather for Poetry
+  Heart, // Added Heart for Health/Fitness
+  ForkKnife, // Added ForkKnife for Cookbooks
+  Activity, // Added Activity for Health/Fitness
 } from "lucide-react";
 // Import the CSS file
 import "../styles/GenrePage.css"; // Adjust path if needed
@@ -25,12 +29,16 @@ const getGenreDisplayProps = (
   const lowerGenre = genreName?.toLowerCase() || "unknown";
   const iconMappings: { [key: string]: React.ElementType } = {
     "self-help": Brain,
-    devotional: BookHeart,
-    "sci-fi": Atom,
+    "business-finance": DollarSign, // Added DollarSign for Business/Finance
+    psychology: Brain, // Existing Brain icon for Psychology
+    cookbooks: ForkKnife, // Added ForkKnife for Cookbooks
+    "health-fitness": Activity, // Added Activity for Health/Fitness
+    poetry: Feather, // Added Feather for Poetry
     biography: User,
-    t1: User,
-    t2: User,
-    unknown: HelpCircle,
+    miscellaneous: HelpCircle,
+    romance: BookHeart, // Added BookHeart for Romance
+    fantasy: Rocket, // Added Rocket for Fantasy
+    mystery: BookOpen, // Added BookOpen for Mystery
   };
   const defaultIcon = HelpCircle;
   return { icon: iconMappings[lowerGenre] || defaultIcon };
@@ -51,19 +59,20 @@ const FIXED_GENRES = [
   "Devotional",
   "Sci-Fi",
   "Biography",
-  "t1",
-  "t2",
-  "Unknown",
+  "Romance", // Added Romance
+  "Fantasy", // Added Fantasy
+  "Mystery", // Added Mystery
+  "Cookbooks", // Added Cookbooks
+  "Health-Fitness", // Added Health-Fitness
+  "Poetry", // Added Poetry
+  "Miscellaneous",
 ];
 
 const GenrePage: React.FC = () => {
   return (
-    // Apply container class
     <div className="genre-page-container">
-      {/* Apply title class */}
       <h1 className="genre-page-title">Browse Books by Genre</h1>
 
-      {/* Apply grid class */}
       <div className="genre-grid">
         {FIXED_GENRES.map((genreName) => {
           const displayProps = getGenreDisplayProps(genreName);
@@ -75,17 +84,13 @@ const GenrePage: React.FC = () => {
             <Link
               key={genreName}
               to={path}
-              // Apply base tile class and specific color class
               className={`genre-tile ${colorClass}`}
             >
-              {/* Apply icon class - Reduced size */}
               <IconComponent
                 size={48}
                 strokeWidth={1.5}
                 className="genre-tile-icon"
-              />{" "}
-              {/* Reduced size from 56 */}
-              {/* Apply text class */}
+              />
               <span className="genre-tile-text">{genreName}</span>
             </Link>
           );

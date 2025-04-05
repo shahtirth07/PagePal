@@ -1,0 +1,186 @@
+/* Main container */
+.chat-page {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background-color: #f4f7f6;
+  }
+  
+  /* Back Button Styling */
+  .back-button {
+    margin-bottom: 24px;
+    font-size: 18px;
+    color: #3498db;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+  }
+  
+  .back-button:hover {
+    color: #2980b9;
+  }
+  
+  /* Book details container */
+  .book-details-box {
+    background-color: white;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 24px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+  }
+  
+  /* Book cover image */
+  .book-cover-placeholder {
+    width: 120px;
+    height: 180px;
+    background-color: #e0e0e0;
+    border-radius: 8px;
+    margin-right: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+    color: #888;
+  }
+  
+  /* Book details text */
+  .book-info {
+    flex-grow: 1;
+  }
+  
+  .book-info h2 {
+    font-size: 24px;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 8px;
+  }
+  
+  .book-info p {
+    font-size: 16px;
+    color: #555;
+    margin: 4px 0;
+  }
+  
+  .book-info .author {
+    color: #888;
+  }
+  
+  .book-info .genre {
+    color: #3498db;
+    font-style: italic;
+  }
+  
+  /* Loading and error state for book */
+  .loading-state, .error-state {
+    text-align: center;
+    font-size: 16px;
+    margin-bottom: 20px;
+  }
+  
+  /* Chat messages container */
+  .chat-container {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    overflow: hidden;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    background-color: #ffffff;
+  }
+  
+  .messages {
+    padding: 16px;
+    overflow-y: auto;
+    flex-grow: 1;
+    background-color: #f9f9f9;
+  }
+  
+  .message {
+    max-width: 85%;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 12px;
+  }
+  
+  .message.user {
+    background-color: #d0e9ff;
+    margin-left: auto;
+  }
+  
+  .message.ai {
+    background-color: #f1f1f1;
+    margin-right: auto;
+  }
+  
+  .message p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.4;
+  }
+  
+  .message .text-sm {
+    font-size: 12px;
+    font-style: italic;
+  }
+  
+  /* Typing indicator for AI */
+  .typing-indicator {
+    font-size: 14px;
+    font-style: italic;
+    color: #aaa;
+  }
+  
+  /* Chat input area */
+  .input-area {
+    display: flex;
+    padding: 16px;
+    border-top: 1px solid #ddd;
+    background-color: #ffffff;
+  }
+  
+  .input-area textarea {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    resize: none;
+    font-size: 14px;
+    outline: none;
+    box-sizing: border-box;
+  }
+  
+  .input-area textarea:focus {
+    border-color: #3498db;
+  }
+  
+  .input-area button {
+    padding: 12px 20px;
+    margin-left: 12px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .input-area button:hover {
+    background-color: #2980b9;
+  }
+  
+  .input-area button:disabled {
+    background-color: #ddd;
+    cursor: not-allowed;
+  }
+  
+  /* Error message in chat */
+  .error-message {
+    color: #e74c3c;
+    text-align: center;
+    margin-bottom: 12px;
+    font-size: 14px;
+  }
+  
