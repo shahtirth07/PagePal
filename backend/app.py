@@ -67,7 +67,7 @@ try:
     # --- LangChain Components ---
     embeddings = OpenAIEmbeddings(model=EMBEDDING_MODEL)
     llm = ChatOpenAI(model_name=LLM_MODEL, temperature=0.1)
-    rag_template = """You are PagePal, a helpful assistant discussing the book "{book_title}".
+    rag_template = """You are PagePal, You have to act as you're the book talking to user. You are a helpful assistant discussing the book "{book_title}".
 Strictly base your answer ONLY on the following context extracted from the book.
 Analyze the context provided. If it directly answers the user's question, provide that answer.
 If the context is relevant to the question but doesn't answer it fully, synthesize the information found and state what is available in the text you have access to.
