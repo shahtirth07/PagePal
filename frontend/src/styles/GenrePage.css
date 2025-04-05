@@ -2,54 +2,50 @@
 
 /* Container for the whole page content */
 .genre-page-container {
-  padding: 2rem; /* p-8 */
+  padding: 2rem;
   height: 100%;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
-  background-color: #ffffff; /* Explicitly set white background */
-  width: 100%; /* Ensure it takes full width within app-container */
+  background-color: #ffffff;
+  width: 100%;
 }
 
 /* Title styling */
 .genre-page-title {
-  font-size: 1.875rem; /* text-3xl */
-  font-weight: 700; /* font-bold */
+  font-size: 1.875rem;
+  font-weight: 700;
   text-align: center;
-  margin-bottom: 2.5rem; /* mb-10 */
-  color: #1f2937; /* text-gray-800 */
+  margin-bottom: 2.5rem;
+  color: #1f2937;
 }
 
-/* Grid container for the genre tiles */
+/* Responsive grid for genre tiles */
 .genre-grid {
-  flex-grow: 1;
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr)); /* Always 2 columns */
-  gap: 1.5rem; /* Increased gap */
-  /* Removed max-width and mx-auto to allow grid to expand */
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1.5rem;
   width: 100%;
+  flex-grow: 1;
 }
 
 /* Individual genre tile styling (base + hover) */
 .genre-tile {
-  /* Layout */
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 1.5rem; /* p-6 */
-  /* Appearance */
-  border-radius: 0.75rem; /* rounded-xl */
-  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); /* shadow-md */
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   text-decoration: none;
-  aspect-ratio: 1 / 1; /* Make tiles square */
-  /* Transitions */
+  aspect-ratio: 1 / 1;
   transition: transform 0.2s ease-in, box-shadow 0.2s ease-in;
 }
 
 .genre-tile:hover {
-  transform: translateY(-5px); /* Lift effect */
-  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1); /* Increased shadow */
+  transform: translateY(-5px);
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
 }
 
 .genre-tile:focus-visible {
@@ -59,71 +55,84 @@
 
 /* Icon styles within the tile */
 .genre-tile-icon {
-  margin-bottom: 1rem; /* mb-4 */
-  /* Size is set via props */
+  margin-bottom: 1rem;
 }
 
 /* Text styles within the tile */
 .genre-tile-text {
-  font-size: 1.125rem; /* text-lg */
-  font-weight: 600; /* font-semibold */
+  font-size: 1.125rem;
+  font-weight: 600;
   text-align: center;
 }
 
-@media (min-width: 768px) { /* md breakpoint */
- .genre-tile-text {
-    font-size: 1.25rem; /* md:text-xl */
+/* Medium screens and up */
+@media (min-width: 768px) {
+  .genre-tile-text {
+    font-size: 1.25rem;
   }
- .genre-tile {
-     padding: 2rem; /* md:p-8 */
- }
- .genre-grid {
-    gap: 2rem; /* md:gap-8 */
- }
+
+  .genre-tile {
+    padding: 2rem;
+  }
+
+  .genre-grid {
+    gap: 2rem;
+  }
 }
 
+/* Small screens (mobile tweaks) */
+@media (max-width: 480px) {
+  .genre-tile-text {
+    font-size: 1rem;
+  }
 
-/* --- Genre Specific Color Classes (Ensure names match generated names) --- */
-/* Using hyphens now, e.g., genre-tile--self-help */
+  .genre-tile-icon {
+    width: 36px;
+    height: 36px;
+  }
 
+  .genre-tile {
+    padding: 1rem;
+  }
+}
+
+/* --- Genre Specific Color Classes --- */
 .genre-tile--self-help {
-  background-color: #ecfdf5; /* emerald-50 */
-  color: #065f46; /* emerald-700 */
+  background-color: #ecfdf5;
+  color: #065f46;
 }
 .genre-tile--self-help:hover {
-  background-color: #d1fae5; /* emerald-100 */
+  background-color: #d1fae5;
 }
 
 .genre-tile--devotional {
-  background-color: #f5f3ff; /* violet-50 */
-  color: #6d28d9; /* violet-700 */
+  background-color: #f5f3ff;
+  color: #6d28d9;
 }
 .genre-tile--devotional:hover {
-  background-color: #ede9fe; /* violet-100 */
+  background-color: #ede9fe;
 }
 
-/* Corrected class name to match generator */
 .genre-tile--sci-fi {
-  background-color: #f0f9ff; /* sky-50 */
-  color: #0369a1; /* sky-700 */
+  background-color: #f0f9ff;
+  color: #0369a1;
 }
 .genre-tile--sci-fi:hover {
-  background-color: #e0f2fe; /* sky-100 */
+  background-color: #e0f2fe;
 }
 
 .genre-tile--biography {
-  background-color: #fffbeb; /* amber-50 */
-  color: #b45309; /* amber-700 */
+  background-color: #fffbeb;
+  color: #b45309;
 }
 .genre-tile--biography:hover {
-  background-color: #fef3c7; /* amber-100 */
+  background-color: #fef3c7;
 }
 
 .genre-tile--unknown {
-  background-color: #f1f5f9; /* slate-100 */
-  color: #334155; /* slate-700 */
+  background-color: #f1f5f9;
+  color: #334155;
 }
 .genre-tile--unknown:hover {
-  background-color: #e2e8f0; /* slate-200 */
+  background-color: #e2e8f0;
 }
-

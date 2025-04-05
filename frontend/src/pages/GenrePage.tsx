@@ -28,6 +28,8 @@ const getGenreDisplayProps = (
     devotional: BookHeart,
     "sci-fi": Atom,
     biography: User,
+    t1: User,
+    t2: User,
     unknown: HelpCircle,
   };
   const defaultIcon = HelpCircle;
@@ -49,6 +51,8 @@ const FIXED_GENRES = [
   "Devotional",
   "Sci-Fi",
   "Biography",
+  "t1",
+  "t2",
   "Unknown",
 ];
 
