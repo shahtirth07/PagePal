@@ -2,6 +2,7 @@
 import os
 from flask import Flask, jsonify, request
 from dotenv import load_dotenv
+from flask_cors import CORS
 
 # --- LangChain Imports ---
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
@@ -52,6 +53,7 @@ except Exception as e:
 
 # --- Flask App ---
 app = Flask(__name__)
+CORS(app)
 
 # Simple test route
 @app.route('/api/hello', methods=['GET'])
