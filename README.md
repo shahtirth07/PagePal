@@ -85,8 +85,3 @@ cd frontend
 run: npm run dev (windows frontend)
 run: npm run-script dev (mac os)
 
-    %% Explanation:
-    %% This diagram shows the main Python classes/components involved in the backend.
-    %% FlaskApp handles requests and uses the RAGChain.
-    %% RAGChain orchestrates retrieval (via Retriever/Chroma) and generation (via ChatOpenAI/PromptTemplate).
-    %% IngestionScript uses Loader/Splitter/Embeddings/Chroma to populate the database initially.
