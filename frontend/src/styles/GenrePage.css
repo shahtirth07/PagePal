@@ -1,124 +1,181 @@
+/* Container for the genre page */
 .genre-page-container {
-    padding: 2rem;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    box-sizing: border-box;
-    background: linear-gradient(135deg, #f0f4ff, #ffeefc);
-    width: 100%;
-  }
-  
-  .genre-page-title {
-    font-size: 2rem;
-    font-weight: 700;
-    text-align: center;
-    margin-bottom: 2rem;
-    color: #2c3e50;
-  }
-  
-  .genre-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 1.5rem;
-    width: 100%;
-    flex-grow: 1;
-  }
-  
-  .genre-tile {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 1.5rem;
-    border-radius: 2rem;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-    text-decoration: none;
-    aspect-ratio: 1 / 1;
-    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-  }
-  
-  .genre-tile:hover {
-    transform: scale(1.05);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-  }
-  
-  .genre-tile:focus-visible {
-    outline: 2px solid #a78bfa;
-    outline-offset: 4px;
-  }
-  
-  .genre-tile-icon {
-    margin-bottom: 1rem;
-  }
-  
+  padding: 2rem;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  background: linear-gradient(135deg, #f0f4ff, #ffeefc);
+  width: 100%;
+}
+
+/* Title Styling */
+.genre-page-title {
+  font-size: 2rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #2c3e50;
+}
+
+/* Genre Grid Layout */
+.genre-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1.5rem;
+  width: 100%;
+  flex-grow: 1;
+}
+
+/* Genre Tile Styling */
+.genre-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  border-radius: 2rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  text-decoration: none;
+  aspect-ratio: 1 / 1;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+/* Hover Effect for Genre Tile */
+.genre-tile:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.genre-tile:focus-visible {
+  outline: 2px solid #a78bfa;
+  outline-offset: 4px;
+}
+
+/* Icon Styling */
+.genre-tile-icon {
+  margin-bottom: 1rem;
+}
+
+/* Text in Genre Tiles */
+.genre-tile-text {
+  font-size: 1.125rem;
+  font-weight: 600;
+  text-align: center;
+  color: #333;
+}
+
+@media (min-width: 768px) {
   .genre-tile-text {
-    font-size: 1.125rem;
-    font-weight: 600;
-    text-align: center;
-    color: #333;
+    font-size: 1.25rem;
   }
-  
-  @media (min-width: 768px) {
-    .genre-tile-text {
-      font-size: 1.25rem;
-    }
-    .genre-tile {
-      padding: 2rem;
-    }
-    .genre-grid {
-      gap: 2rem;
-    }
+  .genre-tile {
+    padding: 2rem;
   }
-  
-  @media (max-width: 480px) {
-    .genre-tile-text {
-      font-size: 1rem;
-    }
-    .genre-tile-icon {
-      width: 36px;
-      height: 36px;
-    }
-    .genre-tile {
-      padding: 1rem;
-    }
+  .genre-grid {
+    gap: 2rem;
   }
-  
-  .genre-tile--self-help {
-    background-color: #e3fcec;
-    color: #116d53;
+}
+
+@media (max-width: 480px) {
+  .genre-tile-text {
+    font-size: 1rem;
   }
-  .genre-tile--self-help:hover {
-    background-color: #cbf3de;
+  .genre-tile-icon {
+    width: 36px;
+    height: 36px;
   }
-  
-  .genre-tile--devotional {
-    background-color: #f3e8ff;
-    color: #6b21a8;
+  .genre-tile {
+    padding: 1rem;
   }
-  .genre-tile--devotional:hover {
-    background-color: #e9d5ff;
-  }
-  
-  .genre-tile--sci-fi {
-    background-color: #e0f7fa;
-    color: #006064;
-  }
-  .genre-tile--sci-fi:hover {
-    background-color: #b2ebf2;
-  }
-  
-  .genre-tile--biography {
-    background-color: #fff8e1;
-    color: #795548;
-  }
-  .genre-tile--biography:hover {
-    background-color: #ffecb3;
-  }
-  
-  .genre-tile--unknown {
-    background-color: #f1f5f9;
-    color: #334155;
-  }
-  .genre-tile--unknown:hover {
-    background-color: #e2e8f0;
-  }
+}
+
+/* Genre-Specific Tile Styles */
+
+.genre-tile--self-help {
+  background-color: #e3fcec; /* Light Green */
+  color: #116d53;
+}
+.genre-tile--self-help:hover {
+  background-color: #cbf3de;
+}
+
+.genre-tile--business-finance {
+  background-color: #e0f7fa; /* Light Cyan */
+  color: #006064;
+}
+.genre-tile--business-finance:hover {
+  background-color: #b2ebf2;
+}
+
+.genre-tile--psychology {
+  background-color: #f3e8ff; /* Light Lavender */
+  color: #6a1b9a;
+}
+.genre-tile--psychology:hover {
+  background-color: #e9d5ff;
+}
+
+.genre-tile--cookbooks {
+  background-color: #fff8e1; /* Light Yellow */
+  color: #795548;
+}
+.genre-tile--cookbooks:hover {
+  background-color: #ffecb3;
+}
+
+.genre-tile--health-fitness {
+  background-color: #e1f5fe; /* Light Blue */
+  color: #0277bd;
+}
+.genre-tile--health-fitness:hover {
+  background-color: #b3e5fc;
+}
+
+.genre-tile--poetry {
+  background-color: #f8bbd0; /* Light Pink */
+  color: #ad1457;
+}
+.genre-tile--poetry:hover {
+  background-color: #f48fb1;
+}
+
+.genre-tile--biography {
+  background-color: #fff8e1; /* Light Amber */
+  color: #795548;
+}
+.genre-tile--biography:hover {
+  background-color: #ffecb3;
+}
+
+.genre-tile--romance {
+  background-color: #f1f8e9; /* Light Greenish */
+  color: #c2185b;
+}
+.genre-tile--romance:hover {
+  background-color: #c8e6c9;
+}
+
+.genre-tile--fantasy {
+  background-color: #f3e5f5; /* Light Purple */
+  color: #673ab7;
+}
+.genre-tile--fantasy:hover {
+  background-color: #e1bee7;
+}
+
+.genre-tile--mystery {
+  background-color: #e8f5e9; /* Light Green */
+  color: #2e7d32;
+}
+.genre-tile--mystery:hover {
+  background-color: #c8e6c9;
+}
+
+.genre-tile--unknown {
+  background-color: #f1f5f9; /* Light Gray */
+  color: #334155;
+}
+.genre-tile--unknown:hover {
+  background-color: #e2e8f0;
+}
