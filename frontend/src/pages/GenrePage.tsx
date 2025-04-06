@@ -1,16 +1,15 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import {
+  Heart,
   Brain,
   BookOpen,
   Rocket,
   User,
   HelpCircle,
   BookHeart,
-  Atom,
   DollarSign, // Added DollarSign for Business/Finance
   Feather, // Added Feather for Poetry
-  Heart, // Added Heart for Health/Fitness
   ForkKnife, // Added ForkKnife for Cookbooks
   Activity, // Added Activity for Health/Fitness
 } from "lucide-react";
@@ -28,17 +27,17 @@ const getGenreDisplayProps = (
 ): GenreDisplayProps => {
   const lowerGenre = genreName?.toLowerCase() || "unknown";
   const iconMappings: { [key: string]: React.ElementType } = {
-    "self-help": Brain,
+    "self-help": Heart,
     "business-finance": DollarSign, // Added DollarSign for Business/Finance
-    psychology: Brain, // Existing Brain icon for Psychology
-    cookbooks: ForkKnife, // Added ForkKnife for Cookbooks
+    "psychology": Brain, // Existing Brain icon for Psychology
+    "cookbooks": ForkKnife, // Added ForkKnife for Cookbooks
     "health-fitness": Activity, // Added Activity for Health/Fitness
-    poetry: Feather, // Added Feather for Poetry
-    biography: User,
-    miscellaneous: HelpCircle,
-    romance: BookHeart, // Added BookHeart for Romance
-    fantasy: Rocket, // Added Rocket for Fantasy
-    mystery: BookOpen, // Added BookOpen for Mystery
+    "poetry": Feather, // Added Feather for Poetry
+    "biography": User,
+    "miscellaneous": HelpCircle,
+    "romance": BookHeart, // Added BookHeart for Romance
+    "fantasy": Rocket, // Added Rocket for Fantasy
+    "mystery": BookOpen, // Added BookOpen for Mystery
   };
   const defaultIcon = HelpCircle;
   return { icon: iconMappings[lowerGenre] || defaultIcon };
@@ -56,8 +55,8 @@ const getGenreColorClass = (genreName: string | null | undefined): string => {
 // Define the fixed list of genres to always display
 const FIXED_GENRES = [
   "Self-Help",
-  "Devotional",
-  "Sci-Fi",
+  "Psychology",
+  "business-finance",
   "Biography",
   "Romance", // Added Romance
   "Fantasy", // Added Fantasy
@@ -65,7 +64,7 @@ const FIXED_GENRES = [
   "Cookbooks", // Added Cookbooks
   "Health-Fitness", // Added Health-Fitness
   "Poetry", // Added Poetry
-  "Miscellaneous",
+  "unknown",
 ];
 
 const GenrePage: React.FC = () => {
