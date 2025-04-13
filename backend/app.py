@@ -5,7 +5,7 @@ import os
 import sys
 import json # For caching results
 import hashlib # For creating cache keys
-from flask import Flask, jsonify, request, abort
+from flask import Flask, jsonify, request, abort, render_template
 from flask_cors import CORS
 from dotenv import load_dotenv
 from pymongo import MongoClient # Use synchronous pymongo
@@ -21,6 +21,8 @@ from langchain.schema.output_parser import StrOutputParser
 from scipy.spatial.distance import cosine as cosine_distance # Keep for re-ranking
 import numpy as np # Keep for re-ranking
 import redis # Import redis
+from flask_socketio import SocketIO, emit, join_room, leave_room
+from datetime import datetime
 
 load_dotenv()
 
@@ -183,6 +185,105 @@ except Exception as e:
 # --- Flask App ---
 app = Flask(__name__)
 CORS(app)
+socketio = SocketIO(app, cors_allowed_origins="*")
+
+# --- Chat Room Management ---
+active_users = {}  # {room_id: {user_id: username}}
+chat_history = {}  # {room_id: [messages]}
+
+# --- SocketIO Events ---
+@socketio.on('connect')
+def handle_connect():
+    print('Client connected')
+
+@socketio.on('disconnect')
+def handle_disconnect():
+    print('Client disconnected')
+
+@socketio.on('join')
+def handle_join(data):
+    room = data.get('room')
+    username = data.get('username')
+    if not room or not username:
+        return
+    
+    join_room(room)
+    if room not in active_users:
+        active_users[room] = {}
+        chat_history[room] = []
+    
+    active_users[room][request.sid] = username
+    emit('user_joined', {'username': username, 'users': list(active_users[room].values())}, room=room)
+    emit('chat_history', {'messages': chat_history[room]}, room=request.sid)
+
+@socketio.on('leave')
+def handle_leave(data):
+    room = data.get('room')
+    if not room or room not in active_users:
+        return
+    
+    username = active_users[room].get(request.sid)
+    if username:
+        leave_room(room)
+        del active_users[room][request.sid]
+        emit('user_left', {'username': username, 'users': list(active_users[room].values())}, room=room)
+
+@socketio.on('message')
+def handle_message(data):
+    room = data.get('room')
+    message = data.get('message')
+    username = active_users[room].get(request.sid)
+    
+    if not room or not message or not username:
+        return
+    
+    message_data = {
+        'username': username,
+        'message': message,
+        'timestamp': str(datetime.now())
+    }
+    
+    chat_history[room].append(message_data)
+    emit('message', message_data, room=room)
+
+@socketio.on('ask_book')
+def handle_book_question(data):
+    room = data.get('room')
+    book_id = data.get('book_id')
+    question = data.get('question')
+    username = active_users[room].get(request.sid)
+    
+    if not all([room, book_id, question, username]):
+        return
+    
+    try:
+        # Get the chat context
+        context = "\n".join([f"{msg['username']}: {msg['message']}" for msg in chat_history[room][-5:]])
+        
+        # Prepare the question with context
+        full_question = f"Based on our discussion: {context}\n\nQuestion: {question}"
+        
+        # Get book opinion using existing RAG chain
+        input_dict = {
+            "query": full_question,
+            "filter": {"_id": ObjectId(book_id)},
+            "book_title": "the book"
+        }
+        
+        answer = rag_chain.invoke(input_dict)
+        
+        # Send the book's response
+        message_data = {
+            'username': 'Book',
+            'message': answer,
+            'timestamp': str(datetime.now())
+        }
+        
+        chat_history[room].append(message_data)
+        emit('message', message_data, room=room)
+        
+    except Exception as e:
+        emit('error', {'message': str(e)}, room=request.sid)
 
 # --- API Endpoints (Keep hello, chat, get_books, get_genres, get_book_details the same logic) ---
 # The 'chat' endpoint uses the synchronous rag_chain
@@ -242,6 +343,10 @@ def get_book_details(book_id):
         else: return jsonify({"error": "Book not found."}), 404
     except Exception as e: print(f"Error fetching book details from MongoDB: {e}"); return jsonify({"error": "An error occurred fetching book details."}), 500
 
+@app.route('/')
+def index():
+    return render_template('index.html')
+
 # --- Main Execution ---
 if __name__ == '__main__':
     # Removed the asyncio.run(initialize_mongo()) call
@@ -251,5 +356,5 @@ if __name__ == '__main__':
     if rag_chain is None:
          print("FATAL: RAG Chain failed to initialize. Cannot start Flask app.")
          sys.exit(1)
-    app.run(debug=True, port=port)
+    socketio.run(app, debug=True, port=port)
 

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PagePal Chat</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .chat-container {
+            height: 400px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+        .message {
+            margin-bottom: 10px;
+            padding: 8px;
+            border-radius: 4px;
+        }
+        .user-message {
+            background-color: #e3f2fd;
+            margin-left: 20px;
+        }
+        .book-message {
+            background-color: #f1f8e9;
+            margin-right: 20px;
+        }
+        .input-container {
+            display: flex;
+            gap: 10px;
+        }
+        input, button {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .user-list {
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>PagePal Chat</h1>
+        <div class="user-list" id="userList">Users: </div>
+        <div class="chat-container" id="chatContainer"></div>
+        <div class="input-container">
+            <input type="text" id="messageInput" placeholder="Type your message...">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+        <div class="input-container" style="margin-top: 10px;">
+            <input type="text" id="bookQuestion" placeholder="Ask the book about our discussion...">
+            <button onclick="askBook()">Ask Book</button>
+        </div>
+    </div>
+
+    <script>
+        const socket = io();
+        const roomId = 'room1'; // You can make this dynamic
+        const username = prompt('Enter your username:') || 'Anonymous';
+        
+        // Join the room
+        socket.emit('join', { room: roomId, username: username });
+        
+        // Handle incoming messages
+        socket.on('message', (data) => {
+            const chatContainer = document.getElementById('chatContainer');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${data.username === 'Book' ? 'book-message' : 'user-message'}`;
+            messageDiv.innerHTML = `<strong>${data.username}:</strong> ${data.message}`;
+            chatContainer.appendChild(messageDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        });
+        
+        // Handle user list updates
+        socket.on('user_joined', (data) => {
+            document.getElementById('userList').textContent = `Users: ${data.users.join(', ')}`;
+        });
+        
+        socket.on('user_left', (data) => {
+            document.getElementById('userList').textContent = `Users: ${data.users.join(', ')}`;
+        });
+        
+        // Handle chat history
+        socket.on('chat_history', (data) => {
+            const chatContainer = document.getElementById('chatContainer');
+            data.messages.forEach(msg => {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${msg.username === 'Book' ? 'book-message' : 'user-message'}`;
+                messageDiv.innerHTML = `<strong>${msg.username}:</strong> ${msg.message}`;
+                chatContainer.appendChild(messageDiv);
+            });
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        });
+        
+        // Send message
+        function sendMessage() {
+            const messageInput = document.getElementById('messageInput');
+            const message = messageInput.value.trim();
+            if (message) {
+                socket.emit('message', { room: roomId, message: message });
+                messageInput.value = '';
+            }
+        }
+        
+        // Ask book question
+        function askBook() {
+            const bookQuestion = document.getElementById('bookQuestion');
+            const question = bookQuestion.value.trim();
+            if (question) {
+                socket.emit('ask_book', { 
+                    room: roomId, 
+                    book_id: 'YOUR_BOOK_ID', // Replace with actual book ID
+                    question: question 
+                });
+                bookQuestion.value = '';
+            }
+        }
+        
+        // Handle Enter key
+        document.getElementById('messageInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+        
+        document.getElementById('bookQuestion').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') askBook();
+        });
+    </script>
+</body>
+</html> 
